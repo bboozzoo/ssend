@@ -13,8 +13,8 @@ def parse_arguments():
                         help='Slack webhook URL')
     parser.add_argument('-a', '--send-as', default=None,
                         help='Send as')
+    parser.add_argument('-t', '--to', help='Send to #channel, @user')
     parser.add_argument('message', help='Message')
-    parser.add_argument('to', help='Send to ex. #channel, @user')
     return parser.parse_args()
 
 
@@ -35,12 +35,19 @@ def main(opts):
 
             if not opts.send_as and conf.has_option('slack', 'send_as'):
                 opts.send_as = conf.get('slack', 'send_as')
+
+            if not opts.to and conf.has_option('slack', 'default_to'):
+                opts.to = conf.get('slack', 'default_to')
         except KeyError:
             pass
 
     if not url:
         logging.error('Error: no webhook URL provided')
         logging.error('Either use -u or set SLACK_WEBHOOK_URL')
+        raise SystemExit(1)
+
+    if not opts.to:
+        logging.erro('Cannot send a message with no destination')
         raise SystemExit(1)
 
     if not opts.send_as:

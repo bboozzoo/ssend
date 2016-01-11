@@ -6,3 +6,6 @@ webhook_url =
 
 # send as
 send_as =
+
+# default target to notify, @user, '#channel'
+default_to =
