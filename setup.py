@@ -15,4 +15,7 @@ setup(
         'ssend',
         'ssend-notify'
     ],
+    install_requires=[
+        'requests',
+    ],
 )
