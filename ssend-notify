@@ -46,6 +46,8 @@ while true; do
     esac
 done
 
+[ $# -lt 1 ] && exit 0
+
 eval $*
 
 ssend $as $to "Command \`$*\` finished with status $? on host $(hostname)"
