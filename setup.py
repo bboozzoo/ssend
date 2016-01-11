@@ -2,7 +2,7 @@ from setuptools import setup
 
 def version():
     import subprocess
-    vers = subprocess.check_output('git describe --always', shell=True)
+    vers = str(subprocess.check_output('git describe --always', shell=True))
     return vers
 
 NAME = 'Slack message send helper'
