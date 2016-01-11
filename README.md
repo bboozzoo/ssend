@@ -25,6 +25,7 @@ your account settings and put the URL in your config file as
 ```
 ssend -t @yourslackusername 'your message'
 ssend -t '#channelname' 'your message'
+```
 
 ### ssend-notify
 
