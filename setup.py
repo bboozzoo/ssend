@@ -11,5 +11,8 @@ VERSION = version()
 setup(
     name=NAME,
     version=VERSION,
-    scripts = ['ssend', 'ssend-notify']
+    scripts=[
+        'ssend',
+        'ssend-notify'
+    ],
 )
