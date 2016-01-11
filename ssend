@@ -1,0 +1,52 @@
+#!/usr/bin/python2
+
+import requests
+import argparse
+import logging
+import os
+import json
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Slack Sender')
+    parser.add_argument('-u', '--webhook-url', default=None,
+                        help='Slack webhook URL')
+    parser.add_argument('-a', '--send-as',
+                        help='Send as')
+    parser.add_argument('message', help='Message')
+    parser.add_argument('to', help='Send to ex. #channel, @user')
+    return parser.parse_args()
+
+def main(opts):
+    url = os.environ.get('SLACK_WEBHOOK_URL', None)
+    if not url:
+        url = opts.webhook_url
+
+    if not url:
+        logging.error('Error: no webhook URL provided')
+        logging.error('Either use -u or set SLACK_WEBHOOK_URL')
+        raise SystemExit(1)
+
+    payload = {
+        'channel': opts.to,
+        'text': opts.message
+    }
+
+    if opts.send_as:
+        payload['username'] = opts.send_as
+
+    logging.debug('sending message to %s', opts.to)
+    logging.debug('message: %s', json.dumps(payload))
+
+    r = requests.post(url, data=json.dumps(payload))
+
+    logging.debug('status: %d', r.status_code)
+    logging.debug('response: %s', r.text)
+
+
+if __name__ == '__main__':
+    opts = parse_arguments()
+
+    logging.basicConfig(level=logging.DEBUG)
+
+    main(opts)
+
