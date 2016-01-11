@@ -1,0 +1,8 @@
+# general slack configuration
+[slack]
+
+# your webhook url
+webhook_url =
+
+# send as
+send_as =

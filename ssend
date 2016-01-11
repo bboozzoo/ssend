@@ -5,26 +5,46 @@ import argparse
 import logging
 import os
 import json
+import ConfigParser
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Slack Sender')
     parser.add_argument('-u', '--webhook-url', default=None,
                         help='Slack webhook URL')
-    parser.add_argument('-a', '--send-as',
+    parser.add_argument('-a', '--send-as', default=None,
                         help='Send as')
     parser.add_argument('message', help='Message')
     parser.add_argument('to', help='Send to ex. #channel, @user')
     return parser.parse_args()
 
+
 def main(opts):
     url = os.environ.get('SLACK_WEBHOOK_URL', None)
+
     if not url:
         url = opts.webhook_url
+
+    user_conf = os.path.expanduser('~/.config/slack-send/config')
+    if os.path.exists(user_conf):
+        conf = ConfigParser.ConfigParser()
+        conf.read(user_conf)
+
+        try:
+            if not url and conf.has_option('slack', 'webhook_url'):
+                url = conf.get('slack', 'webhook_url')
+
+            if not opts.send_as and conf.has_option('slack', 'send_as'):
+                opts.send_as = conf.get('slack', 'send_as')
+        except KeyError:
+            pass
 
     if not url:
         logging.error('Error: no webhook URL provided')
         logging.error('Either use -u or set SLACK_WEBHOOK_URL')
         raise SystemExit(1)
+
+    if not opts.send_as:
+        opts.send_as = 'bot'
 
     payload = {
         'channel': opts.to,
