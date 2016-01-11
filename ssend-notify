@@ -50,4 +50,4 @@ done
 
 eval $*
 
-ssend $as $to "Command \`$*\` executed in directory \`$PWD\` finished with status $? on host $(hostname)"
+ssend $as $to "Command \`$*\` executed in directory \`$PWD\` finished with status *$?* on host \`$(hostname)\`"
